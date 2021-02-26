@@ -21,6 +21,14 @@ def create_app():
 
     # 라우터 정의
 
+    @app.get('/')
+    def read_root():
+        return {'Hello': 'World'}
+
+    @app.get('/items/{item_id}')
+    def read_item(item_id: int, q: Optional[str] = None):
+        return {'item_id': item_id, 'q': q}
+
     return app
 
 
