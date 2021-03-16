@@ -1,7 +1,7 @@
 from typing import Optional
 
 import uvicorn
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Path
 from pydantic import BaseModel
 
 
@@ -12,6 +12,11 @@ class Item(BaseModel):
     tax: Optional[float] = None
 
 
+class User(BaseModel):
+    username: str
+    full_name: Optional[str] = None
+
+
 def create_app():
     result_app = FastAPI()
 
@@ -19,7 +24,7 @@ def create_app():
     async def create_item(item: Item):
         item_dict = item.dict()
 
-        if (item.tax):
+        if item.tax:
             price_with_tax = item.price + item.tax
             item_dict.update({
                 "price_with_tax": price_with_tax
@@ -28,14 +33,27 @@ def create_app():
         return item_dict
 
     @result_app.put('/items/{item_id}')
-    async def create_item(item_id: int, item: Item, q: Optional[str] = Query(..., min_length=3)):
+    async def update_item(
+            *,
+            item_id: int = Path(..., title='The ID of the item to get', ge=0, le=1000),
+            item: Optional[Item] = None,
+            user: Optional[User] = None,
+            q: Optional[str] = None
+    ):
         result = {
             'item_id': item_id,
-            **item.dict()
+            **item.dict(),
+            **user.dict()
         }
 
         if q:
             result.update({'q': q})
+
+        if item.tax:
+            price_with_tax = item.price + item.tax
+            result.update({
+                'price_with_tax': price_with_tax
+            })
 
         return result
 
