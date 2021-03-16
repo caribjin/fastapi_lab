@@ -1,6 +1,7 @@
 from typing import Optional
 from fastapi import FastAPI
 from pydantic import BaseModel
+from enum import Enum
 
 import uvicorn
 
@@ -26,14 +27,11 @@ def create_app():
 
     # print(f'name={my_item.name} price={my_item.price} is_offer={my_item.is_offer}')
 
-    my_item2: Item = Item(**{
-        'id': 2,
-        'name': 'test2',
-        # 'price': 3000,
-        'is_offer': True
-    })
+    class ModelName(str, Enum):
+        alexnet = 'alexnet'
+        resnet = 'resnet'
+        lenet = 'lenet'
 
-    # print(f'name={my_item2.name} price={my_item2.price} is_offer={my_item2.is_offer}')
 
     # 레디스 초기화
 
@@ -52,6 +50,16 @@ def create_app():
     @app.post('/items/{item_id}')
     def update_item(item_id: int, item: Item):
         return {'item_id': item_id, 'item_name': item.name}
+
+    @app.get('/models/{model_name}')
+    def get_model(model_name: ModelName):
+        if model_name == ModelName.alexnet:
+            return {'model_name': model_name, 'message': 'deep learning FTW!'}
+
+        if model_name.value == "lenet":
+            return {"model_name": model_name, "message": "LeCNN all the images"}
+
+        return {"model_name": model_name, "message": "Have some residuals"}
 
     return app
 
