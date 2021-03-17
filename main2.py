@@ -1,8 +1,8 @@
-from typing import Optional
+from typing import Optional, List, Set
 
 import uvicorn
-from fastapi import FastAPI, Query, Path
-from pydantic import BaseModel
+from fastapi import FastAPI, Query, Path, Body
+from pydantic import BaseModel, Field
 
 
 class Item(BaseModel):
@@ -10,6 +10,8 @@ class Item(BaseModel):
     description: Optional[str] = 'This is item description'
     price: float
     tax: Optional[float] = None
+    tags: List[str] = []
+    sets: Set[str] = set()
 
 
 class User(BaseModel):
