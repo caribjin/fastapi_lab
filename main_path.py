@@ -84,4 +84,4 @@ def create_app():
 app = create_app()
 
 if __name__ == '__main__':
-    uvicorn.run('main2:app', host='0.0.0.0', port=8000, reload=True)
+    uvicorn.run('main_path:app', host='0.0.0.0', port=8000, reload=True)

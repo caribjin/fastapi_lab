@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 class Item(BaseModel):
     name: str = Field(..., example='Foo')
     description: Optional[str] = Field(None, example='A very nice item')
-    price: float = Field(..., example=35.4)
+    price: float = Field(..., example=35.41)
     tax: Optional[float] = Field(..., example=3.2)
 
     # class Config:
@@ -20,10 +20,11 @@ class Item(BaseModel):
     #         }
     #     }
 
+
 def create_app():
     lapp = FastAPI()
 
-    @lapp.put('/items/{item_id')
+    @lapp.put('/items/{item_id}')
     async def update_item(item_id: int, item: Item):
         result = {
             'item_id': item_id,
@@ -38,4 +39,4 @@ def create_app():
 app = create_app()
 
 if __name__ == '__main__':
-    uvicorn.run('main4:app', host='0.0.0.0', port=8000, reload=True)
+    uvicorn.run('main_config_example:app', host='0.0.0.0', port=8000, reload=True)
